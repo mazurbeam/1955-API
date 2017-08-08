@@ -4,7 +4,7 @@ const People = mongoose.model('People')
 module.exports = {
   index: (req, res) =>{
     console.log('running index function')
-    var people = People.find({}, (err, data) => {
+    People.find({}, (err, data) => {
       if(err){
         res.json(err)
         return
@@ -13,7 +13,7 @@ module.exports = {
     })
   },
   new: (req,res) =>{
-    console.log('adding ', req.params.name)
+    console.log('adding: ', req.params.name)
     var person = new People({name: req.params.name})
     person.save(err=>{
       if(err){
@@ -26,10 +26,26 @@ module.exports = {
   },
 
   remove: (req,res) =>{
-
+    console.log('removing: ', req.params.name)
+    People.remove({name: req.params.name}, err=>{
+      if(err){
+        console.log('something went wrong with remove')
+      } else {
+        console.log('succesfully removed person')
+        res.redirect('/')
+      }
+    })
   },
 
   name: (req, res) => {
+    People.find({name: req.params.name}, (err,data)=>{
+      if(err){
+        res.json(err)
+        return
+      }
+      res.json(data)
 
+      }
+  )
   },
 }
